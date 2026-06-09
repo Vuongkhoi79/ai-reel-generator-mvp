@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Máy Tạo Reel AI</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">AI Reel Generator MVP</p>
+        <h1>Máy Tạo Reel AI</h1>
+        <p class="subhead">Chọn ngành, sản phẩm, pain point và angle để tạo hook, kịch bản, caption, thumbnail prompt và hướng dẫn CapCut.</p>
+      </div>
+      <a id="zaloTop" class="zalo-link" href="#" target="_blank" rel="noreferrer">Vào Zalo nhận thêm 30 mẫu Reel miễn phí</a>
+    </section>
+
+    <section class="workspace">
+      <form id="generatorForm" class="panel input-panel">
+        <div class="status-row">
+          <span id="modeBadge" class="badge">Đang tải dữ liệu</span>
+          <span class="small-note">Nguồn: DATABASE_MARKETING.xlsx</span>
+        </div>
+
+        <label>
+          Ngành nghề
+          <select id="industrySelect" name="industryId" required></select>
+        </label>
+
+        <label>
+          Sản phẩm/dịch vụ
+          <select id="productSelect" name="productId" required></select>
+        </label>
+
+        <label>
+          Pain point
+          <select id="painSelect" name="painId" required></select>
+        </label>
+
+        <label>
+          Mục tiêu Reel
+          <select id="goalSelect" name="goalId" required></select>
+        </label>
+
+        <label>
+          Angle content
+          <select id="angleSelect" name="angleId" required></select>
+        </label>
+
+        <label>
+          Thời lượng
+          <select id="durationSelect" name="duration" required>
+            <option value="15s">15s</option>
+            <option value="25s">25s</option>
+            <option value="45s">45s</option>
+            <option value="60s">60s</option>
+          </select>
+        </label>
+
+        <button id="generateButton" class="primary-button" type="submit">TẠO REEL</button>
+      </form>
+
+      <section class="panel result-panel">
+        <div class="result-header">
+          <div>
+            <p class="eyebrow">Kết quả</p>
+            <h2>Bộ nội dung Reel</h2>
+          </div>
+          <button id="copyAllButton" class="ghost-button" type="button">Copy tất cả</button>
+        </div>
+
+        <div id="emptyState" class="empty-state">
+          Chọn dữ liệu bên trái rồi bấm TẠO REEL. Nếu chưa có API key, hệ thống sẽ chạy Demo Mode bằng dữ liệu mẫu.
+        </div>
+
+        <div id="loadingState" class="loading-state hidden">Đang tạo nội dung...</div>
+
+        <div id="resultContent" class="result-content hidden">
+          <article class="output-block">
+            <div class="block-title"><h3>3 Reel hoàn chỉnh</h3><button data-copy-target="reelsOutput" type="button">Copy</button></div>
+            <div id="reelsOutput"></div>
+          </article>
+
+          <article class="output-block">
+            <div class="block-title"><h3>10 Caption</h3><button data-copy-target="captionsOutput" type="button">Copy</button></div>
+            <ol id="captionsOutput"></ol>
+          </article>
+
+          <article class="output-block">
+            <div class="block-title"><h3>5 CTA</h3><button data-copy-target="ctasOutput" type="button">Copy</button></div>
+            <ol id="ctasOutput"></ol>
+          </article>
+
+          <article class="output-block">
+            <div class="block-title"><h3>3 Prompt ảnh/thumbnail</h3><button data-copy-target="imagePromptsOutput" type="button">Copy</button></div>
+            <ol id="imagePromptsOutput"></ol>
+          </article>
+
+          <article class="output-block">
+            <div class="block-title"><h3>Hướng dẫn dựng CapCut</h3><button data-copy-target="capcutOutput" type="button">Copy</button></div>
+            <ol id="capcutOutput"></ol>
+          </article>
+          <a id="zaloBottom" class="zalo-cta" href="#" target="_blank" rel="noreferrer">Vào Zalo nhận thêm 30 mẫu Reel miễn phí</a>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
