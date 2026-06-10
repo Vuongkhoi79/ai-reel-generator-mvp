@@ -430,6 +430,13 @@ pre {
   font-weight: 700;
 }
 
+.popup-note {
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 @media (min-width: 860px) {
   .app-shell {
     padding: 24px;
