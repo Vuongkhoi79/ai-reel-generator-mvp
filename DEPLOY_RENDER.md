@@ -59,6 +59,7 @@ Trong tab `Environment`, thêm:
 ```text
 OPENAI_API_KEY=sk-...
 OPENAI_MODEL=gpt-4.1-mini
+GOOGLE_SHEET_WEBHOOK_URL=https://script.google.com/macros/s/xxx/exec
 ```
 
 Tùy chọn:
@@ -68,6 +69,8 @@ ZALO_URL=https://zalo.me/g/9uomhrx1pwhmhosltoze
 ```
 
 Nếu không có `OPENAI_API_KEY`, app vẫn chạy Demo Mode.
+
+Xem thêm `GOOGLE_SHEET_SETUP.md` để tạo webhook Google Sheet.
 
 ## 5. Lấy URL public
 

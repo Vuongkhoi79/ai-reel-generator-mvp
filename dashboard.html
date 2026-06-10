@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard - Máy Tạo Reel AI</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Tracking Dashboard</p>
+        <h1>Dashboard</h1>
+        <p class="subhead">Theo dõi lượt truy cập, lượt tạo Reel, click Zalo và ngành nghề được chọn nhiều nhất.</p>
+      </div>
+      <div class="hero-actions">
+        <a class="dashboard-link" href="/">Quay lại tool</a>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="metric-card">
+        <span>Visits</span>
+        <strong id="visitsMetric">0</strong>
+      </article>
+      <article class="metric-card">
+        <span>Generate</span>
+        <strong id="generateMetric">0</strong>
+      </article>
+      <article class="metric-card">
+        <span>Click Zalo</span>
+        <strong id="zaloMetric">0</strong>
+      </article>
+      <article class="metric-card">
+        <span>Conversion Rate</span>
+        <strong id="conversionMetric">0%</strong>
+      </article>
+    </section>
+
+    <section class="workspace dashboard-workspace">
+      <article class="panel result-panel">
+        <div class="result-header">
+          <div>
+            <p class="eyebrow">Top ngành</p>
+            <h2>Ngành nghề được chọn nhiều nhất</h2>
+          </div>
+        </div>
+        <ol id="topIndustries" class="ranking-list"></ol>
+      </article>
+
+      <article class="panel result-panel">
+        <div class="result-header">
+          <div>
+            <p class="eyebrow">Trạng thái</p>
+            <h2>Google Sheet</h2>
+          </div>
+        </div>
+        <p id="sheetStatus" class="subhead"></p>
+      </article>
+    </section>
+  </main>
+
+  <script src="/dashboard.js"></script>
+</body>
+</html>

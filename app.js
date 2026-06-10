@@ -24,7 +24,47 @@ const els = {
   copyAll: document.getElementById("copyAllButton"),
   zaloTop: document.getElementById("zaloTop"),
   zaloBottom: document.getElementById("zaloBottom"),
+  zaloPopup: document.getElementById("zaloPopup"),
+  popupClose: document.getElementById("popupClose"),
+  zaloPopupButton: document.getElementById("zaloPopupButton"),
 };
+
+function getSessionId() {
+  const key = "ai_reel_session_id";
+  let value = localStorage.getItem(key);
+  if (!value) {
+    value = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    localStorage.setItem(key, value);
+  }
+  return value;
+}
+
+function selectedTrackingPayload(extra = {}) {
+  return {
+    sessionId: getSessionId(),
+    industryId: els.industry.value,
+    productId: els.product.value,
+    painId: els.pain.value,
+    goalId: els.goal.value,
+    angleId: els.angle.value,
+    duration: els.duration.value,
+    ...extra,
+  };
+}
+
+function track(eventType, payload = {}) {
+  const body = JSON.stringify({eventType, sessionId: getSessionId(), ...payload});
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon("/api/track", new Blob([body], {type: "application/json"}));
+    return;
+  }
+  fetch("/api/track", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body,
+    keepalive: true,
+  }).catch(() => {});
+}
 
 function option(value, label) {
   const item = document.createElement("option");
@@ -198,6 +238,7 @@ function renderResult(response) {
   els.modeBadge.textContent = `Chế độ: ${modeText}`;
   els.emptyState.classList.add("hidden");
   els.resultContent.classList.remove("hidden");
+  showZaloPopup();
 }
 
 function blockTextById(id) {
@@ -259,6 +300,16 @@ async function submitForm(event) {
   }
 }
 
+function showZaloPopup() {
+  if (!els.zaloPopup) return;
+  els.zaloPopup.classList.remove("hidden");
+}
+
+function hideZaloPopup() {
+  if (!els.zaloPopup) return;
+  els.zaloPopup.classList.add("hidden");
+}
+
 async function init() {
   try {
     const response = await fetch("/api/options");
@@ -269,6 +320,8 @@ async function init() {
     els.modeBadge.textContent = state.data.demoMode ? "Chế độ: Demo Mode" : "Chế độ: OpenAI API";
     els.zaloTop.href = state.data.zaloUrl;
     els.zaloBottom.href = state.data.zaloUrl;
+    els.zaloPopupButton.href = state.data.zaloUrl;
+    track("visit", {page: "home"});
   } catch (error) {
     showError(`Không đọc được database: ${error.message}`);
   }
@@ -277,6 +330,15 @@ async function init() {
 els.industry.addEventListener("change", refreshDependentSelects);
 els.form.addEventListener("submit", submitForm);
 els.copyAll.addEventListener("click", () => copyText(state.lastResultText, els.copyAll));
+els.popupClose.addEventListener("click", hideZaloPopup);
+els.zaloPopup.addEventListener("click", (event) => {
+  if (event.target === els.zaloPopup) hideZaloPopup();
+});
+[els.zaloTop, els.zaloBottom, els.zaloPopupButton].forEach((link) => {
+  link.addEventListener("click", () => {
+    track("zalo_click", selectedTrackingPayload({source: link.id || "zalo"}));
+  });
+});
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-copy-target]");
   if (!button) return;

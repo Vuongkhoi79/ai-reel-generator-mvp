@@ -17,6 +17,12 @@ Mở trình duyệt:
 http://127.0.0.1:8088
 ```
 
+Dashboard tracking:
+
+```text
+http://127.0.0.1:8088/dashboard.html
+```
+
 ## Chạy với OpenAI API
 
 Nếu chưa có API key, tool tự chạy Demo Mode.
@@ -43,6 +49,31 @@ Có thể đổi link Zalo bằng biến môi trường:
 $env:ZALO_URL="https://zalo.me/g/your-real-group"
 python server.py
 ```
+
+## Tracking
+
+App đo:
+
+- Visits
+- Generate
+- Click Zalo
+- Conversion Rate
+- Ngành nghề được generate nhiều nhất
+
+Tracking local lưu vào:
+
+```text
+tracking_events.jsonl
+```
+
+Muốn lưu vào Google Sheet, cấu hình:
+
+```powershell
+$env:GOOGLE_SHEET_WEBHOOK_URL="https://script.google.com/macros/s/xxx/exec"
+python server.py
+```
+
+Xem chi tiết trong `GOOGLE_SHEET_SETUP.md`.
 
 ## File chính
 

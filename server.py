@@ -1,8 +1,11 @@
 import json
 import os
 import re
+import threading
 import urllib.error
 import urllib.request
+from collections import Counter
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -17,6 +20,9 @@ HOST = "0.0.0.0"
 PORT = int(os.environ.get("PORT", 8088))
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
 ZALO_URL = os.getenv("ZALO_URL", "https://zalo.me/g/9uomhrx1pwhmhosltoze")
+GOOGLE_SHEET_WEBHOOK_URL = os.getenv("GOOGLE_SHEET_WEBHOOK_URL", "")
+TRACKING_PATH = Path(os.getenv("TRACKING_PATH", BASE_DIR / "tracking_events.jsonl"))
+TRACKING_LOCK = threading.Lock()
 
 
 def normalize(text):
@@ -92,6 +98,113 @@ def load_database():
 
 
 DATABASE = load_database()
+
+
+def now_iso():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def item_name(items, item_id):
+    try:
+        return find_item(items, item_id)["name"]
+    except Exception:
+        return ""
+
+
+def enrich_tracking_payload(payload):
+    data = dict(payload or {})
+    industry_id = data.get("industryId")
+    if industry_id:
+        try:
+            industry_id = int(industry_id)
+            data["industryName"] = item_name(DATABASE["industries"], industry_id)
+            if data.get("productId"):
+                data["productName"] = item_name(DATABASE["products"].get(industry_id, []), data["productId"])
+            if data.get("painId"):
+                data["painPoint"] = item_name(DATABASE["pains"].get(industry_id, []), data["painId"])
+            if data.get("goalId"):
+                data["goalName"] = item_name(DATABASE["goals"].get(industry_id, []), data["goalId"])
+            if data.get("angleId"):
+                data["angleName"] = item_name(DATABASE["angles"].get(industry_id, []), data["angleId"])
+        except Exception:
+            pass
+    return data
+
+
+def post_to_google_sheet(event):
+    if not GOOGLE_SHEET_WEBHOOK_URL:
+        return
+    try:
+        request = urllib.request.Request(
+            GOOGLE_SHEET_WEBHOOK_URL,
+            data=json.dumps(event, ensure_ascii=False).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        urllib.request.urlopen(request, timeout=8).read()
+    except Exception as exc:
+        print(f"Google Sheet tracking failed: {exc}")
+
+
+def record_event(event_type, payload=None, handler=None):
+    event = {
+        "timestamp": now_iso(),
+        "eventType": event_type,
+        "payload": enrich_tracking_payload(payload or {}),
+    }
+    if handler:
+        event["ip"] = handler.client_address[0] if handler.client_address else ""
+        event["userAgent"] = handler.headers.get("User-Agent", "")
+
+    TRACKING_PATH.parent.mkdir(parents=True, exist_ok=True)
+    line = json.dumps(event, ensure_ascii=False)
+    with TRACKING_LOCK:
+        with TRACKING_PATH.open("a", encoding="utf-8") as file:
+            file.write(line + "\n")
+    post_to_google_sheet(event)
+    return event
+
+
+def read_tracking_events():
+    if not TRACKING_PATH.exists():
+        return []
+    events = []
+    with TRACKING_LOCK:
+        with TRACKING_PATH.open("r", encoding="utf-8") as file:
+            for line in file:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    events.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+    return events
+
+
+def dashboard_metrics():
+    events = read_tracking_events()
+    visits = sum(1 for event in events if event.get("eventType") == "visit")
+    generates = sum(1 for event in events if event.get("eventType") == "generate")
+    zalo_clicks = sum(1 for event in events if event.get("eventType") == "zalo_click")
+    industry_counter = Counter(
+        event.get("payload", {}).get("industryName") or "Không xác định"
+        for event in events
+        if event.get("eventType") == "generate"
+    )
+    conversion_rate = round((zalo_clicks / visits) * 100, 2) if visits else 0
+    return {
+        "visits": visits,
+        "generates": generates,
+        "zaloClicks": zalo_clicks,
+        "conversionRate": conversion_rate,
+        "topIndustries": [
+            {"industry": industry, "count": count}
+            for industry, count in industry_counter.most_common(10)
+        ],
+        "recentEvents": events[-50:][::-1],
+        "googleSheetEnabled": bool(GOOGLE_SHEET_WEBHOOK_URL),
+    }
 
 
 def find_item(items, item_id):
@@ -314,6 +427,10 @@ class AppHandler(BaseHTTPRequestHandler):
             send_json(self, 200, DATABASE)
             return
 
+        if path == "/api/dashboard":
+            send_json(self, 200, dashboard_metrics())
+            return
+
         if path == "/":
             path = "/index.html"
 
@@ -335,6 +452,17 @@ class AppHandler(BaseHTTPRequestHandler):
         self.wfile.write(content)
 
     def do_POST(self):
+        if self.path == "/api/track":
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                payload = json.loads(self.rfile.read(length).decode("utf-8")) if length else {}
+                event_type = payload.pop("eventType", "custom")
+                record_event(event_type, payload, self)
+                send_json(self, 200, {"ok": True})
+            except Exception as exc:
+                send_json(self, 400, {"error": str(exc)})
+            return
+
         if self.path != "/api/generate":
             self.send_error(404)
             return
@@ -353,6 +481,7 @@ class AppHandler(BaseHTTPRequestHandler):
             else:
                 result = demo_response(payload)
                 mode = "demo"
+            record_event("generate", {**payload, "mode": mode}, self)
             send_json(self, 200, {"mode": mode, "prompt": prompt, "result": result})
         except Exception as exc:
             send_json(self, 400, {"error": str(exc)})
