@@ -400,6 +400,36 @@ pre {
   display: none !important;
 }
 
+.zalo-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(3px);
+}
+
+.zalo-modal-backdrop.hidden {
+  display: none !important;
+}
+
+.zalo-modal {
+  position: relative;
+  width: min(440px, calc(100% - 32px));
+  border-radius: 18px;
+  background: #fff;
+  padding: 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+}
+
+.zalo-modal .zalo-cta {
+  min-height: 52px;
+  margin-bottom: 10px;
+}
+
 .popup-card {
   position: relative;
   width: min(420px, 100%);
@@ -469,6 +499,17 @@ pre {
 
 .zalo-back-link {
   min-height: 42px;
+}
+
+.zalo-later-button {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--primary-dark);
+  cursor: pointer;
+  font-weight: 700;
 }
 
 @media (min-width: 860px) {

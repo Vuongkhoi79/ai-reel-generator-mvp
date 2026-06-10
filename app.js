@@ -3,8 +3,6 @@ const state = {
   lastResultText: "",
 };
 
-const ZALO_PAGE_URL = "./zalo.html";
-
 const els = {
   form: document.getElementById("generatorForm"),
   industry: document.getElementById("industrySelect"),
@@ -29,6 +27,7 @@ const els = {
   zaloPopup: document.getElementById("zaloPopup"),
   popupClose: document.getElementById("popupClose"),
   zaloPopupButton: document.getElementById("zaloPopupButton"),
+  zaloLaterButton: document.getElementById("zaloLaterButton"),
 };
 
 function getSessionId() {
@@ -74,11 +73,10 @@ function trackZaloPageClickSafe(source = "zalo") {
   } catch (error) {}
 }
 
-function configureZaloLink(link) {
-  if (!link) return;
-  link.setAttribute("href", ZALO_PAGE_URL);
-  link.setAttribute("target", "_blank");
-  link.setAttribute("rel", "noopener noreferrer");
+function trackZaloGroupClickSafe(source = "zalo") {
+  try {
+    track("zalo_group_click", selectedTrackingPayload({source}));
+  } catch (error) {}
 }
 
 function option(value, label) {
@@ -341,9 +339,6 @@ async function init() {
     refreshDependentSelects();
     setDefaultTestCase();
     els.modeBadge.textContent = state.data.demoMode ? "Chế độ: Demo Mode" : "Chế độ: OpenAI API";
-    configureZaloLink(els.zaloTop);
-    configureZaloLink(els.zaloBottom);
-    configureZaloLink(els.zaloPopupButton);
     track("visit", {page: "home"});
   } catch (error) {
     showError(`Không đọc được database: ${error.message}`);
@@ -354,17 +349,18 @@ els.industry.addEventListener("change", refreshDependentSelects);
 els.form.addEventListener("submit", submitForm);
 els.copyAll.addEventListener("click", () => copyText(state.lastResultText, els.copyAll));
 els.popupClose.addEventListener("click", hideZaloPopup);
+els.zaloLaterButton.addEventListener("click", hideZaloPopup);
 els.zaloPopup.addEventListener("click", (event) => {
   if (event.target === els.zaloPopup) hideZaloPopup();
 });
-[els.zaloTop, els.zaloBottom, els.zaloPopupButton].forEach((link) => {
-  configureZaloLink(link);
-  link.addEventListener("click", () => {
-    configureZaloLink(link);
-    trackZaloPageClickSafe(link.id || "zalo");
+[els.zaloTop, els.zaloBottom].forEach((button) => {
+  button.addEventListener("click", () => {
+    trackZaloPageClickSafe(button.id || "zalo");
+    showZaloPopup();
   });
 });
 els.zaloPopupButton.addEventListener("click", () => {
+  trackZaloGroupClickSafe("zaloPopupButton");
   closeGiftPopupSafe();
 });
 document.addEventListener("click", (event) => {

@@ -16,7 +16,7 @@
       </div>
       <div class="hero-actions">
         <a class="dashboard-link" href="/dashboard.html" target="_blank" rel="noreferrer">Dashboard</a>
-        <a id="zaloTop" class="zalo-link" href="./zalo.html" target="_blank" rel="noopener noreferrer">Vào Zalo nhận thêm 30 mẫu Reel miễn phí</a>
+        <button id="zaloTop" class="zalo-link" type="button">Vào Zalo nhận thêm 30 mẫu Reel miễn phí</button>
       </div>
     </section>
 
@@ -105,24 +105,26 @@
             <div class="block-title"><h3>Hướng dẫn dựng CapCut</h3><button data-copy-target="capcutOutput" type="button">Copy</button></div>
             <ol id="capcutOutput"></ol>
           </article>
-          <a id="zaloBottom" class="zalo-cta" href="./zalo.html" target="_blank" rel="noopener noreferrer">Vào Zalo nhận thêm 30 mẫu Reel miễn phí</a>
+          <button id="zaloBottom" class="zalo-cta" type="button">Vào Zalo nhận thêm 30 mẫu Reel miễn phí</button>
         </div>
       </section>
     </section>
   </main>
 
-  <div id="zaloPopup" class="popup-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="zaloPopupTitle">
-    <section class="popup-card">
+  <div id="zaloPopup" class="zalo-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="zaloPopupTitle">
+    <section class="zalo-modal">
       <button id="popupClose" class="popup-close" type="button" aria-label="Đóng popup">×</button>
       <p class="eyebrow">Quà tặng miễn phí</p>
-      <h2 id="zaloPopupTitle">🎁 Muốn nhận thêm?</h2>
+      <h2 id="zaloPopupTitle">🎁 Nhận quà trong nhóm Zalo</h2>
+      <p class="subhead">Bạn sẽ nhận miễn phí:</p>
       <ul class="gift-list">
         <li>30 Workflow AI thực chiến</li>
         <li>50 Hook Viral</li>
         <li>30 Kịch bản Reel kéo Inbox</li>
       </ul>
-      <p class="popup-note">👉 Bấm để vào nhóm Zalo.<br>Nếu bạn đang dùng máy tính, hãy quét QR bằng app Zalo trên điện thoại.</p>
-      <a id="zaloPopupButton" class="zalo-cta" href="./zalo.html" target="_blank" rel="noopener noreferrer">Vào Zalo Group</a>
+      <p class="popup-note">Nếu bạn đang dùng máy tính, Zalo có thể yêu cầu quét QR bằng app Zalo trên điện thoại.</p>
+      <a id="zaloPopupButton" class="zalo-cta" href="./zalo.html" target="_blank" rel="noopener noreferrer">VÀO NHÓM ZALO</a>
+      <button id="zaloLaterButton" class="zalo-later-button" type="button">Để sau</button>
     </section>
   </div>
 
