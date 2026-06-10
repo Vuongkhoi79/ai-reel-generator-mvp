@@ -353,9 +353,10 @@ els.zaloLaterButton.addEventListener("click", hideZaloPopup);
 els.zaloPopup.addEventListener("click", (event) => {
   if (event.target === els.zaloPopup) hideZaloPopup();
 });
-[els.zaloTop, els.zaloBottom].forEach((button) => {
-  button.addEventListener("click", () => {
-    trackZaloPageClickSafe(button.id || "zalo");
+[...document.querySelectorAll("[data-zalo-trigger]")].forEach((trigger) => {
+  trigger.addEventListener("click", (event) => {
+    event.preventDefault();
+    trackZaloPageClickSafe(trigger.id || "zalo");
     showZaloPopup();
   });
 });
