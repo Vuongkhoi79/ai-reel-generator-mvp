@@ -186,7 +186,11 @@ def dashboard_metrics():
     events = read_tracking_events()
     visits = sum(1 for event in events if event.get("eventType") == "visit")
     generates = sum(1 for event in events if event.get("eventType") == "generate")
-    zalo_clicks = sum(1 for event in events if event.get("eventType") == "zalo_click")
+    zalo_clicks = sum(
+        1
+        for event in events
+        if event.get("eventType") in ("zalo_click", "zalo_page_click", "zalo_group_click")
+    )
     industry_counter = Counter(
         event.get("payload", {}).get("industryName") or "Không xác định"
         for event in events

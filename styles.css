@@ -441,6 +441,36 @@ pre {
   line-height: 1.55;
 }
 
+.zalo-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.zalo-page-card {
+  width: min(520px, 100%);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.zalo-gift-list {
+  margin-top: 12px;
+}
+
+.zalo-page-button {
+  min-height: 52px;
+  margin-bottom: 10px;
+}
+
+.zalo-back-link {
+  min-height: 42px;
+}
+
 @media (min-width: 860px) {
   .app-shell {
     padding: 24px;

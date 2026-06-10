@@ -3,7 +3,7 @@ const state = {
   lastResultText: "",
 };
 
-const ZALO_URL = "https://zalo.me/g/9uomhrx1pwhmhosltoze";
+const ZALO_PAGE_URL = "./zalo.html";
 
 const els = {
   form: document.getElementById("generatorForm"),
@@ -68,16 +68,15 @@ function track(eventType, payload = {}) {
   }).catch(() => {});
 }
 
-function trackZaloClickSafe(source = "zalo") {
+function trackZaloPageClickSafe(source = "zalo") {
   try {
-    track("zalo_click", selectedTrackingPayload({source}));
+    track("zalo_page_click", selectedTrackingPayload({source}));
   } catch (error) {}
 }
 
 function configureZaloLink(link) {
   if (!link) return;
-  const targetUrl = state.data?.zaloUrl || ZALO_URL;
-  link.setAttribute("href", targetUrl);
+  link.setAttribute("href", ZALO_PAGE_URL);
   link.setAttribute("target", "_blank");
   link.setAttribute("rel", "noopener noreferrer");
 }
@@ -362,11 +361,11 @@ els.zaloPopup.addEventListener("click", (event) => {
   configureZaloLink(link);
   link.addEventListener("click", () => {
     configureZaloLink(link);
-    trackZaloClickSafe(link.id || "zalo");
+    trackZaloPageClickSafe(link.id || "zalo");
   });
 });
 els.zaloPopupButton.addEventListener("click", () => {
-  setTimeout(closeGiftPopupSafe, 300);
+  closeGiftPopupSafe();
 });
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-copy-target]");
