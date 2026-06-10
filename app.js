@@ -24,7 +24,7 @@ const els = {
   copyAll: document.getElementById("copyAllButton"),
   zaloTop: document.getElementById("zaloTop"),
   zaloBottom: document.getElementById("zaloBottom"),
-  zaloPopup: document.getElementById("zaloPopup"),
+  zaloPopup: document.getElementById("zaloModal"),
   popupClose: document.getElementById("popupClose"),
   zaloPopupButton: document.getElementById("zaloPopupButton"),
   zaloLaterButton: document.getElementById("zaloLaterButton"),
@@ -321,6 +321,9 @@ function showZaloPopup() {
 function hideZaloPopup() {
   if (!els.zaloPopup) return;
   els.zaloPopup.classList.add("hidden");
+  if (window.location.hash === "#zaloModal") {
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
 }
 
 function closeGiftPopupSafe() {

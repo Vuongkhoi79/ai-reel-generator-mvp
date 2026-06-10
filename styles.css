@@ -404,7 +404,7 @@ pre {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 18px;
@@ -412,7 +412,12 @@ pre {
   backdrop-filter: blur(3px);
 }
 
-.zalo-modal-backdrop.hidden {
+.zalo-modal-backdrop:not(.hidden),
+#zaloModal:target {
+  display: flex;
+}
+
+.zalo-modal-backdrop.hidden:not(:target) {
   display: none !important;
 }
 

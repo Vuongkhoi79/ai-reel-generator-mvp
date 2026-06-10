@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Máy Tạo Reel AI</title>
-  <link rel="stylesheet" href="/styles.css?v=modal-flow-001">
+  <link rel="stylesheet" href="/styles.css?v=modal-flow-002">
 </head>
 <body>
   <main class="app-shell">
@@ -16,7 +16,7 @@
       </div>
       <div class="hero-actions">
         <a class="dashboard-link" href="/dashboard.html" target="_blank" rel="noreferrer">Dashboard</a>
-        <a id="zaloTop" class="zalo-link" href="./zalo.html" target="_blank" rel="noopener noreferrer" data-zalo-trigger>Vào Zalo nhận thêm 30 mẫu Reel miễn phí</a>
+        <a id="zaloTop" class="zalo-link" href="#zaloModal" data-zalo-trigger>Vào Zalo nhận thêm 30 mẫu Reel miễn phí</a>
       </div>
     </section>
 
@@ -105,15 +105,15 @@
             <div class="block-title"><h3>Hướng dẫn dựng CapCut</h3><button data-copy-target="capcutOutput" type="button">Copy</button></div>
             <ol id="capcutOutput"></ol>
           </article>
-          <a id="zaloBottom" class="zalo-cta" href="./zalo.html" target="_blank" rel="noopener noreferrer" data-zalo-trigger>Vào Zalo nhận thêm 30 mẫu Reel miễn phí</a>
+          <a id="zaloBottom" class="zalo-cta" href="#zaloModal" data-zalo-trigger>Vào Zalo nhận thêm 30 mẫu Reel miễn phí</a>
         </div>
       </section>
     </section>
   </main>
 
-  <div id="zaloPopup" class="zalo-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="zaloPopupTitle">
+  <div id="zaloModal" class="zalo-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="zaloPopupTitle">
     <section class="zalo-modal">
-      <button id="popupClose" class="popup-close" type="button" aria-label="Đóng popup">×</button>
+      <a id="popupClose" class="popup-close" href="#" aria-label="Đóng popup">×</a>
       <p class="eyebrow">Quà tặng miễn phí</p>
       <h2 id="zaloPopupTitle">🎁 Nhận quà trong nhóm Zalo</h2>
       <p class="subhead">Bạn sẽ nhận miễn phí:</p>
@@ -123,11 +123,11 @@
         <li>30 Kịch bản Reel kéo Inbox</li>
       </ul>
       <p class="popup-note">Nếu bạn đang dùng máy tính, Zalo có thể yêu cầu quét QR bằng app Zalo trên điện thoại.</p>
-      <a id="zaloPopupButton" class="zalo-cta" href="./zalo.html" target="_blank" rel="noopener noreferrer">VÀO NHÓM ZALO</a>
-      <button id="zaloLaterButton" class="zalo-later-button" type="button">Để sau</button>
+      <a id="zaloPopupButton" class="zalo-cta" href="./zalo.html" target="_blank" rel="noopener noreferrer" data-zalo-group-link>VÀO NHÓM ZALO</a>
+      <a id="zaloLaterButton" class="zalo-later-button" href="#">Để sau</a>
     </section>
   </div>
 
-  <script src="/app.js?v=modal-flow-001"></script>
+  <script src="/app.js?v=modal-flow-002"></script>
 </body>
 </html>
