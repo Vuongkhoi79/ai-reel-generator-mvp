@@ -68,17 +68,18 @@ function track(eventType, payload = {}) {
   }).catch(() => {});
 }
 
-function openZaloGroup(source = "zalo") {
+function trackZaloClickSafe(source = "zalo") {
   try {
     track("zalo_click", selectedTrackingPayload({source}));
   } catch (error) {}
+}
 
+function configureZaloLink(link) {
+  if (!link) return;
   const targetUrl = state.data?.zaloUrl || ZALO_URL;
-  const opened = window.open(targetUrl, "_blank", "noopener,noreferrer");
-
-  if (!opened) {
-    window.location.href = targetUrl;
-  }
+  link.setAttribute("href", targetUrl);
+  link.setAttribute("target", "_blank");
+  link.setAttribute("rel", "noopener noreferrer");
 }
 
 function option(value, label) {
@@ -333,9 +334,9 @@ async function init() {
     refreshDependentSelects();
     setDefaultTestCase();
     els.modeBadge.textContent = state.data.demoMode ? "Chế độ: Demo Mode" : "Chế độ: OpenAI API";
-    els.zaloTop.href = state.data.zaloUrl || ZALO_URL;
-    els.zaloBottom.href = state.data.zaloUrl || ZALO_URL;
-    els.zaloPopupButton.href = state.data.zaloUrl || ZALO_URL;
+    configureZaloLink(els.zaloTop);
+    configureZaloLink(els.zaloBottom);
+    configureZaloLink(els.zaloPopupButton);
     track("visit", {page: "home"});
   } catch (error) {
     showError(`Không đọc được database: ${error.message}`);
@@ -350,9 +351,10 @@ els.zaloPopup.addEventListener("click", (event) => {
   if (event.target === els.zaloPopup) hideZaloPopup();
 });
 [els.zaloTop, els.zaloBottom, els.zaloPopupButton].forEach((link) => {
-  link.addEventListener("click", (event) => {
-    event.preventDefault();
-    openZaloGroup(link.id || "zalo");
+  configureZaloLink(link);
+  link.addEventListener("click", () => {
+    configureZaloLink(link);
+    trackZaloClickSafe(link.id || "zalo");
   });
 });
 document.addEventListener("click", (event) => {
