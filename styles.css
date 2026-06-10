@@ -396,6 +396,10 @@ pre {
   background: rgba(17, 24, 39, 0.54);
 }
 
+.popup-backdrop.hidden {
+  display: none !important;
+}
+
 .popup-card {
   position: relative;
   width: min(420px, 100%);
