@@ -326,6 +326,14 @@ function hideZaloPopup() {
   els.zaloPopup.classList.add("hidden");
 }
 
+function closeGiftPopupSafe() {
+  try {
+    hideZaloPopup();
+    document.body.classList.remove("modal-open", "popup-open");
+    document.body.style.overflow = "";
+  } catch (error) {}
+}
+
 async function init() {
   try {
     const response = await fetch("/api/options");
@@ -356,6 +364,9 @@ els.zaloPopup.addEventListener("click", (event) => {
     configureZaloLink(link);
     trackZaloClickSafe(link.id || "zalo");
   });
+});
+els.zaloPopupButton.addEventListener("click", () => {
+  setTimeout(closeGiftPopupSafe, 300);
 });
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-copy-target]");
